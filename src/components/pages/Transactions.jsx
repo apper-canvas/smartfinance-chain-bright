@@ -407,12 +407,13 @@ return (
         </div>
       )}
 
-      <TransactionModal
+<TransactionModal
         isOpen={showTransactionModal}
         onClose={closeModal}
         onSubmit={modalMode === "edit" ? handleUpdateTransaction : handleAddTransaction}
         transaction={editingTransaction}
         mode={modalMode}
+        categories={categories}
       />
 
       {/* Category Modal */}
