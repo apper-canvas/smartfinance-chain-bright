@@ -144,7 +144,7 @@ const getCategoryName = (categoryId) => {
             placeholder="Select a category"
 >
             {categories.map((category) => (
-              <option key={category.Id} value={category.Id}>
+              <option key={category.Id} value={category.Id} className="text-gray-900">
                 {category.name_c}
               </option>
             ))}
