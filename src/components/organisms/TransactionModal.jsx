@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { categoryService } from "@/services/api/categoryService";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import ApperIcon from "@/components/ApperIcon";
@@ -8,11 +7,9 @@ import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 
 const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode = "add" }) => {
-  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     type: "expense",
     amount: "",
-    category: "",
     description: "",
     date: format(new Date(), "yyyy-MM-dd"),
     notes: "",
@@ -21,21 +18,6 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
   const [loading, setLoading] = useState(false);
 
   // Load categories on mount
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await categoryService.getAll();
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to load categories:", error);
-        toast.error("Failed to load categories");
-      }
-    };
-
-    if (isOpen) {
-      loadCategories();
-    }
-  }, [isOpen]);
 
 // Set form data when transaction prop changes
   useEffect(() => {
@@ -43,7 +25,6 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       setFormData({
         type: transaction.type_c || "expense",
         amount: transaction.amount_c || "",
-        category: transaction.category_c || "",
         description: transaction.description || "",
         date: transaction.date ? format(new Date(transaction.date), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
         notes: transaction.notes || "",
@@ -52,7 +33,6 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       setFormData({
         type: "expense",
         amount: "",
-        category: "",
         description: "",
         date: format(new Date(), "yyyy-MM-dd"),
         notes: "",
@@ -68,9 +48,6 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       newErrors.amount = "Amount must be greater than 0";
     }
 
-    if (!formData.category) {
-      newErrors.category = "Category is required";
-    }
 
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
@@ -96,7 +73,6 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       const transactionData = {
         ...formData,
         amount: parseFloat(formData.amount),
-        category_c: parseInt(formData.category),
         date: formData.date,
       };
 
@@ -124,7 +100,6 @@ const handleInputChange = (e) => {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
-  const filteredCategories = categories.filter(cat => cat.type_c === formData.type);
 
   if (!isOpen) return null;
   return (
@@ -150,8 +125,8 @@ const handleInputChange = (e) => {
               </label>
               <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                 <button
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, type: "income", category: "" }))}
+type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, type: "income" }))}
                   className={`flex-1 py-2.5 px-4 text-sm font-medium transition-colors duration-200 ${
                     formData.type === "income"
                       ? "bg-gradient-to-r from-success to-green-600 text-white"
@@ -163,7 +138,7 @@ const handleInputChange = (e) => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, type: "expense", category: "" }))}
+onClick={() => setFormData(prev => ({ ...prev, type: "expense" }))}
                   className={`flex-1 py-2.5 px-4 text-sm font-medium transition-colors duration-200 ${
                     formData.type === "expense"
                       ? "bg-gradient-to-r from-error to-red-600 text-white"
@@ -190,21 +165,6 @@ const handleInputChange = (e) => {
             />
           </div>
 
-<Select
-            label="Category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            error={errors.category}
-            required
-            placeholder="Select a category"
->
-            {filteredCategories.map((category) => (
-              <option key={category.Id} value={category.Id}>
-                {category.name_c}
-              </option>
-            ))}
-          </Select>
 
           <Input
             label="Description"
