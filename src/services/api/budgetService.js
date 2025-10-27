@@ -24,11 +24,11 @@ class BudgetService {
         return [];
       }
 
-      return (response.data || []).map(b => ({
+return (response.data || []).map(b => ({
         ...b,
         amount: b.amount_c,
         month: b.month_c,
-        categoryId: b.category_id_c?.Id ? String(b.category_id_c.Id) : null,
+        categoryId: b.category_id_c?.Id || null,
         spent: 0
       }));
     } catch (error) {
@@ -56,12 +56,12 @@ class BudgetService {
         throw new Error(`Budget with Id ${id} not found`);
       }
 
-      const b = response.data;
+const b = response.data;
       return {
         ...b,
         amount: b.amount_c,
         month: b.month_c,
-        categoryId: b.category_id_c?.Id ? String(b.category_id_c.Id) : null,
+        categoryId: b.category_id_c?.Id || null,
         spent: 0
       };
     } catch (error) {
@@ -99,13 +99,13 @@ class BudgetService {
           console.error(`Failed to create ${failed.length} budgets:`, failed);
         }
 
-        if (successful.length > 0) {
+if (successful.length > 0) {
           const b = successful[0].data;
           return {
             ...b,
             amount: b.amount_c,
             month: b.month_c,
-            categoryId: b.category_id_c?.Id ? String(b.category_id_c.Id) : null,
+            categoryId: b.category_id_c?.Id || null,
             spent: 0
           };
         }
@@ -148,13 +148,13 @@ class BudgetService {
           console.error(`Failed to update ${failed.length} budgets:`, failed);
         }
 
-        if (successful.length > 0) {
+if (successful.length > 0) {
           const b = successful[0].data;
           return {
             ...b,
             amount: b.amount_c,
             month: b.month_c,
-            categoryId: b.category_id_c?.Id ? String(b.category_id_c.Id) : null,
+            categoryId: b.category_id_c?.Id || null,
             spent: 0
           };
         }
