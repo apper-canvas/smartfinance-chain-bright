@@ -180,9 +180,9 @@ onClick={() => setFormData(prev => ({ ...prev, type: "expense" }))}
               error={errors.category}
             >
               <option value="">Select a category</option>
-              {categories.map((cat) => (
+{categories.map((cat) => (
                 <option key={cat.Id} value={cat.Id}>
-                  {cat.Name}
+                  {cat.name_c}
                 </option>
               ))}
             </Select>
