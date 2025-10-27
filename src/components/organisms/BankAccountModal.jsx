@@ -66,26 +66,9 @@ if (account) {
       newErrors.balance_c = 'Balance cannot be negative';
     }
 
-    if (!formData.currency_c) {
+if (!formData.currency_c) {
       newErrors.currency_c = 'Currency is required';
     }
-{/* Account Type Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Account Type
-                </label>
-                <Select
-                  value={formData.account_type_c}
-                  onChange={(e) => setFormData({ ...formData, account_type_c: e.target.value })}
-                  className="w-full"
-                >
-                  <option value="">Select Account Type</option>
-                  <option value="Checking">Checking</option>
-                  <option value="Savings">Savings</option>
-                  <option value="Credit Card">Credit Card</option>
-                  <option value="Investment">Investment</option>
-                </Select>
-              </div>
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
