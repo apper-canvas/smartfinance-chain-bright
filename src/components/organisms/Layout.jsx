@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/layouts/Root";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 const Layout = () => {
   const location = useLocation();
   const { logout } = useAuth();
