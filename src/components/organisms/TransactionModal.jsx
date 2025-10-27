@@ -191,7 +191,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
             />
           </div>
 
-          <Select
+<Select
             label="Category"
             name="category"
             value={formData.category}
@@ -201,8 +201,8 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
             placeholder="Select a category"
           >
             {filteredCategories.map((category) => (
-              <option key={category.Id} value={category.name}>
-                {category.name}
+              <option key={category.Id} value={category.name_c}>
+                {category.name_c}
               </option>
             ))}
           </Select>
