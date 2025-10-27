@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Select from "@/components/atoms/Select";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useEffect, useState } from "react";
 import { categoryService } from "@/services/api/categoryService";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Select from "@/components/atoms/Select";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
 
 const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode = "add" }) => {
   const [categories, setCategories] = useState([]);
@@ -114,7 +114,7 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
     }
   };
 
-  const handleInputChange = (e) => {
+const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
@@ -123,11 +123,9 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
-
-  const filteredCategories = categories.filter(cat => cat.type === formData.type);
+  const filteredCategories = categories.filter(cat => cat.type_c === formData.type);
 
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-card shadow-card-hover max-w-md w-full max-h-[90vh] overflow-y-auto">
