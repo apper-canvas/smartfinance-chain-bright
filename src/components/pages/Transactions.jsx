@@ -81,12 +81,12 @@ const handleSaveCategory = async (categoryData) => {
     if (filters.type) {
       filtered = filtered.filter(t => t.type === filters.type);
     }
-
-    // Filter by category
+// Apply category filter
     if (filters.category) {
-      filtered = filtered.filter(t => t.category === filters.category);
+      filtered = filtered.filter(t => t.category_c === parseInt(filters.category));
     }
 
+    // Apply type filter
     // Filter by date range
     if (filters.startDate) {
       const startDate = new Date(filters.startDate);
@@ -356,10 +356,10 @@ return (
               placeholder="All Categories"
               value={filters.category}
               onChange={(e) => handleFilterChange("category", e.target.value)}
-            >
+>
               {categories.map((category) => (
-                <option key={category.Id} value={category.name}>
-                  {category.name}
+                <option key={category.Id} value={category.Id}>
+                  {category.name_c}
                 </option>
               ))}
             </Select>

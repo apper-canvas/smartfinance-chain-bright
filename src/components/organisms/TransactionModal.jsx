@@ -37,15 +37,15 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
     }
   }, [isOpen]);
 
-  // Set form data when transaction prop changes
+// Set form data when transaction prop changes
   useEffect(() => {
     if (transaction && mode === "edit") {
       setFormData({
-        type: transaction.type,
-        amount: transaction.amount.toString(),
-        category: transaction.category,
-        description: transaction.description,
-        date: format(new Date(transaction.date), "yyyy-MM-dd"),
+        type: transaction.type_c || "expense",
+        amount: transaction.amount_c || "",
+        category: transaction.category_c || "",
+        description: transaction.description || "",
+        date: transaction.date ? format(new Date(transaction.date), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
         notes: transaction.notes || "",
       });
     } else {
@@ -91,12 +91,13 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
       return;
     }
 
-    setLoading(true);
+// Prepare transaction data
     try {
       const transactionData = {
         ...formData,
         amount: parseFloat(formData.amount),
-        date: new Date(formData.date).toISOString(),
+        category_c: parseInt(formData.category),
+        date: formData.date,
       };
 
       if (mode === "edit" && transaction) {
@@ -197,9 +198,9 @@ const handleInputChange = (e) => {
             error={errors.category}
             required
             placeholder="Select a category"
-          >
+>
             {filteredCategories.map((category) => (
-              <option key={category.Id} value={category.name_c}>
+              <option key={category.Id} value={category.Id}>
                 {category.name_c}
               </option>
             ))}
