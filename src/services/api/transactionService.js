@@ -80,19 +80,18 @@ class TransactionService {
     }
   }
 
-  async create(transactionData) {
+async create(transactionData) {
     try {
       const apperClient = getApperClient();
       const params = {
         records: [
           {
-            Name: transactionData.description || "Transaction",
-            amount_c: parseFloat(transactionData.amount),
-            category_c: transactionData.category,
+            category_c: transactionData.category ? parseInt(transactionData.category) : null,
+            type_c: transactionData.type,
+            amount_c: transactionData.amount,
             date_c: transactionData.date,
-            description_c: transactionData.description,
-            notes_c: transactionData.notes || "",
-            type_c: transactionData.type
+            description_c: transactionData.description || null,
+            notes_c: transactionData.notes || null
           }
         ]
       };
@@ -133,20 +132,19 @@ class TransactionService {
     }
   }
 
-  async update(id, transactionData) {
+async update(id, transactionData) {
     try {
       const apperClient = getApperClient();
       const params = {
         records: [
           {
-            Id: parseInt(id),
-            Name: transactionData.description || "Transaction",
-            amount_c: parseFloat(transactionData.amount),
-            category_c: transactionData.category,
+            Id: id,
+            category_c: transactionData.category ? parseInt(transactionData.category) : null,
+            type_c: transactionData.type,
+            amount_c: transactionData.amount,
             date_c: transactionData.date,
-            description_c: transactionData.description,
-            notes_c: transactionData.notes || "",
-            type_c: transactionData.type
+            description_c: transactionData.description || null,
+            notes_c: transactionData.notes || null
           }
         ]
       };
