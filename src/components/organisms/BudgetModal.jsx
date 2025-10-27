@@ -142,10 +142,10 @@ const BudgetModal = ({ isOpen, onClose, onSubmit, budget = null, mode = "add" })
             error={errors.categoryId}
             required
             placeholder="Select a category"
-          >
+>
             {categories.map((category) => (
               <option key={category.Id} value={category.Id}>
-                {category.name}
+                {category.name_c}
               </option>
             ))}
           </Select>
