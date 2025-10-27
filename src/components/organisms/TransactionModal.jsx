@@ -6,9 +6,10 @@ import Select from "@/components/atoms/Select";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 
-const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode = "add" }) => {
-  const [formData, setFormData] = useState({
+const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode = "add", categories = [] }) => {
+const [formData, setFormData] = useState({
     type: "expense",
+    category: "",
     amount: "",
     description: "",
     date: format(new Date(), "yyyy-MM-dd"),
@@ -17,21 +18,22 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // Load categories on mount
-
+// Categories are loaded in parent component and passed as prop
 // Set form data when transaction prop changes
   useEffect(() => {
     if (transaction && mode === "edit") {
-      setFormData({
+setFormData({
         type: transaction.type_c || "expense",
+        category: transaction.category_c?.Id || "",
         amount: transaction.amount_c || "",
         description: transaction.description || "",
         date: transaction.date ? format(new Date(transaction.date), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
         notes: transaction.notes || "",
       });
     } else {
-      setFormData({
+setFormData({
         type: "expense",
+        category: "",
         amount: "",
         description: "",
         date: format(new Date(), "yyyy-MM-dd"),
@@ -41,8 +43,9 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
     setErrors({});
   }, [transaction, mode, isOpen]);
 
-  const validateForm = () => {
+const validateForm = () => {
     const newErrors = {};
+    if (!formData.category) newErrors.category = "Category is required";
 
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
       newErrors.amount = "Amount must be greater than 0";
@@ -69,8 +72,9 @@ const TransactionModal = ({ isOpen, onClose, onSubmit, transaction = null, mode 
     }
 
 // Prepare transaction data
-    try {
+try {
       const transactionData = {
+        category: formData.category,
         ...formData,
         amount: parseFloat(formData.amount),
         date: formData.date,
@@ -164,8 +168,28 @@ onClick={() => setFormData(prev => ({ ...prev, type: "expense" }))}
               required
             />
           </div>
-
-
+{/* Category Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category *
+            </label>
+            <Select
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              error={errors.category}
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat.Id} value={cat.Id}>
+                  {cat.Name}
+                </option>
+              ))}
+            </Select>
+            {errors.category && (
+              <p className="text-red-500 text-xs mt-1">{errors.category}</p>
+            )}
+          </div>
           <Input
             label="Description"
             name="description"
