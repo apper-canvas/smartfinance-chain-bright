@@ -13,23 +13,25 @@ const CURRENCIES = [
 ];
 
 const BankAccountModal = ({ isOpen, onClose, onSubmit, account = null, loading = false }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name_c: '',
     account_number_c: '',
     bank_name_c: '',
     balance_c: '',
-    currency_c: 'USD'
+    currency_c: 'USD',
+    account_type_c: ''
   });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (account) {
+if (account) {
       setFormData({
         name_c: account.name_c || '',
         account_number_c: account.account_number_c || '',
         bank_name_c: account.bank_name_c || '',
         balance_c: account.balance_c?.toString() || '',
-        currency_c: account.currency_c || 'USD'
+        currency_c: account.currency_c || 'USD',
+        account_type_c: account.account_type_c || ''
       });
     } else {
       setFormData({
@@ -67,7 +69,23 @@ const BankAccountModal = ({ isOpen, onClose, onSubmit, account = null, loading =
     if (!formData.currency_c) {
       newErrors.currency_c = 'Currency is required';
     }
-
+{/* Account Type Field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Account Type
+                </label>
+                <Select
+                  value={formData.account_type_c}
+                  onChange={(e) => setFormData({ ...formData, account_type_c: e.target.value })}
+                  className="w-full"
+                >
+                  <option value="">Select Account Type</option>
+                  <option value="Checking">Checking</option>
+                  <option value="Savings">Savings</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Investment">Investment</option>
+                </Select>
+              </div>
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

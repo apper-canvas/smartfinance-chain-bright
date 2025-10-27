@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { bankAccountService } from '@/services/api/bankAccountService';
-import Card from '@/components/atoms/Card';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import ApperIcon from '@/components/ApperIcon';
-import Loading from '@/components/ui/Loading';
-import Empty from '@/components/ui/Empty';
-import Error from '@/components/ui/Error';
-import BankAccountModal from '@/components/organisms/BankAccountModal';
-import StatCard from '@/components/molecules/StatCard';
-import { cn } from '@/utils/cn';
+import React, { useEffect, useState } from "react";
+import { bankAccountService } from "@/services/api/bankAccountService";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Card from "@/components/atoms/Card";
+import BankAccountModal from "@/components/organisms/BankAccountModal";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import StatCard from "@/components/molecules/StatCard";
+import { cn } from "@/utils/cn";
 
 const BankAccounts = () => {
   const [accounts, setAccounts] = useState([]);
@@ -28,9 +29,10 @@ const BankAccounts = () => {
   useEffect(() => {
     if (searchTerm.trim()) {
       const filtered = accounts.filter(account =>
-        account.name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+account.name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         account.bank_name_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        account.account_number_c?.toLowerCase().includes(searchTerm.toLowerCase())
+        account.account_number_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        account.account_type_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredAccounts(filtered);
     } else {
@@ -237,9 +239,14 @@ const BankAccounts = () => {
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-base font-semibold text-gray-900 truncate">
-                      {account.name_c}
+{account.name_c}
                     </h3>
                     <p className="text-sm text-gray-500 truncate">{account.bank_name_c}</p>
+                    {account.account_type_c && (
+                      <Badge variant="secondary" className="mt-1">
+                        {account.account_type_c}
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">

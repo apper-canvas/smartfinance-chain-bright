@@ -12,11 +12,12 @@ class BankAccountService {
       
       const params = {
         fields: [
-          { field: { Name: 'name_c' } },
+{ field: { Name: 'name_c' } },
           { field: { Name: 'account_number_c' } },
           { field: { Name: 'bank_name_c' } },
           { field: { Name: 'balance_c' } },
-          { field: { Name: 'currency_c' } }
+          { field: { Name: 'currency_c' } },
+          { field: { Name: 'account_type_c' } }
         ],
         orderBy: [{ fieldName: 'Id', sorttype: 'DESC' }]
       };
@@ -47,11 +48,12 @@ class BankAccountService {
       
       const params = {
         fields: [
-          { field: { Name: 'name_c' } },
+{ field: { Name: 'name_c' } },
           { field: { Name: 'account_number_c' } },
           { field: { Name: 'bank_name_c' } },
           { field: { Name: 'balance_c' } },
-          { field: { Name: 'currency_c' } }
+          { field: { Name: 'currency_c' } },
+          { field: { Name: 'account_type_c' } }
         ]
       };
 
@@ -79,9 +81,10 @@ class BankAccountService {
           {
             name_c: accountData.name_c,
             account_number_c: accountData.account_number_c,
-            bank_name_c: accountData.bank_name_c,
+bank_name_c: accountData.bank_name_c,
             balance_c: parseFloat(accountData.balance_c),
-            currency_c: accountData.currency_c
+            currency_c: accountData.currency_c,
+            account_type_c: accountData.account_type_c
           }
         ]
       };
@@ -134,11 +137,12 @@ class BankAccountService {
         records: [
           {
             Id: id,
-            name_c: accountData.name_c,
+name_c: accountData.name_c,
             account_number_c: accountData.account_number_c,
             bank_name_c: accountData.bank_name_c,
             balance_c: parseFloat(accountData.balance_c),
-            currency_c: accountData.currency_c
+            currency_c: accountData.currency_c,
+            account_type_c: accountData.account_type_c
           }
         ]
       };
