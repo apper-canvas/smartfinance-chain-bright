@@ -5,13 +5,13 @@ class TransactionService {
     this.tableName = "transaction_c";
   }
 
-  async getAll() {
+async getAll() {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords(this.tableName, {
         fields: [
           { field: { Name: "amount_c" } },
-          { field: { Name: "category_c" } },
+          { field: { Name: "category_c" }, referenceField: { field: { Name: "name_c" } } },
           { field: { Name: "date_c" } },
           { field: { Name: "description_c" } },
           { field: { Name: "notes_c" } },
@@ -45,13 +45,13 @@ class TransactionService {
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.getRecordById(this.tableName, id, {
         fields: [
           { field: { Name: "amount_c" } },
-          { field: { Name: "category_c" } },
+          { field: { Name: "category_c" }, referenceField: { field: { Name: "name_c" } } },
           { field: { Name: "date_c" } },
           { field: { Name: "description_c" } },
           { field: { Name: "notes_c" } },
@@ -217,13 +217,13 @@ async update(id, transactionData) {
     }
   }
 
-  async getByDateRange(startDate, endDate) {
+async getByDateRange(startDate, endDate) {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords(this.tableName, {
         fields: [
           { field: { Name: "amount_c" } },
-          { field: { Name: "category_c" } },
+          { field: { Name: "category_c" }, referenceField: { field: { Name: "name_c" } } },
           { field: { Name: "date_c" } },
           { field: { Name: "description_c" } },
           { field: { Name: "notes_c" } },
@@ -263,13 +263,13 @@ async update(id, transactionData) {
     }
   }
 
-  async getByCategory(category) {
+async getByCategory(category) {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords(this.tableName, {
         fields: [
           { field: { Name: "amount_c" } },
-          { field: { Name: "category_c" } },
+          { field: { Name: "category_c" }, referenceField: { field: { Name: "name_c" } } },
           { field: { Name: "date_c" } },
           { field: { Name: "description_c" } },
           { field: { Name: "notes_c" } },
@@ -304,13 +304,13 @@ async update(id, transactionData) {
     }
   }
 
-  async getByType(type) {
+async getByType(type) {
     try {
       const apperClient = getApperClient();
       const response = await apperClient.fetchRecords(this.tableName, {
         fields: [
           { field: { Name: "amount_c" } },
-          { field: { Name: "category_c" } },
+          { field: { Name: "category_c" }, referenceField: { field: { Name: "name_c" } } },
           { field: { Name: "date_c" } },
           { field: { Name: "description_c" } },
           { field: { Name: "notes_c" } },
