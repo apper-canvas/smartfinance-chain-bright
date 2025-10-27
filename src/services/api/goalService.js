@@ -1,102 +1,226 @@
-import goalsData from "@/services/mockData/goals.json";
-
-// Simulate API delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import { getApperClient } from "@/services/apperClient";
 
 class GoalService {
   constructor() {
-    this.goals = [...goalsData];
+    this.tableName = "goal_c";
   }
 
   async getAll() {
-    await delay(300);
-    return [...this.goals];
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.fetchRecords(this.tableName, {
+        fields: [
+          { field: { Name: "name_c" } },
+          { field: { Name: "target_amount_c" } },
+          { field: { Name: "current_amount_c" } },
+          { field: { Name: "deadline_c" } }
+        ]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      return (response.data || []).map(g => ({
+        ...g,
+        name: g.name_c,
+        targetAmount: g.target_amount_c,
+        currentAmount: g.current_amount_c,
+        deadline: g.deadline_c
+      }));
+    } catch (error) {
+      console.error("Error fetching goals:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getById(id) {
-    await delay(200);
-    const goal = this.goals.find(g => g.Id === parseInt(id));
-    if (!goal) {
-      throw new Error(`Goal with Id ${id} not found`);
+    try {
+      const apperClient = getApperClient();
+      const response = await apperClient.getRecordById(this.tableName, id, {
+        fields: [
+          { field: { Name: "name_c" } },
+          { field: { Name: "target_amount_c" } },
+          { field: { Name: "current_amount_c" } },
+          { field: { Name: "deadline_c" } }
+        ]
+      });
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(`Goal with Id ${id} not found`);
+      }
+
+      const g = response.data;
+      return {
+        ...g,
+        name: g.name_c,
+        targetAmount: g.target_amount_c,
+        currentAmount: g.current_amount_c,
+        deadline: g.deadline_c
+      };
+    } catch (error) {
+      console.error(`Error fetching goal ${id}:`, error?.response?.data?.message || error);
+      throw error;
     }
-    return { ...goal };
   }
 
   async create(goalData) {
-    await delay(400);
-    
-    // Find highest Id and add 1
-    const maxId = Math.max(...this.goals.map(g => g.Id), 0);
-    const newGoal = {
-      ...goalData,
-      Id: maxId + 1,
-      createdAt: new Date().toISOString(),
-    };
-    
-    this.goals.push(newGoal);
-    return { ...newGoal };
+    try {
+      const apperClient = getApperClient();
+      const params = {
+        records: [
+          {
+            Name: goalData.name || "Untitled Goal",
+            name_c: goalData.name,
+            target_amount_c: parseFloat(goalData.targetAmount),
+            current_amount_c: parseFloat(goalData.currentAmount || 0),
+            deadline_c: goalData.deadline
+          }
+        ]
+      };
+
+      const response = await apperClient.createRecord(this.tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} goals:`, failed);
+        }
+
+        if (successful.length > 0) {
+          const g = successful[0].data;
+          return {
+            ...g,
+            name: g.name_c,
+            targetAmount: g.target_amount_c,
+            currentAmount: g.current_amount_c,
+            deadline: g.deadline_c
+          };
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error creating goal:", error?.response?.data?.message || error);
+      throw error;
+    }
   }
 
   async update(id, goalData) {
-    await delay(400);
-    
-    const index = this.goals.findIndex(g => g.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Goal with Id ${id} not found`);
+    try {
+      const apperClient = getApperClient();
+      const params = {
+        records: [
+          {
+            Id: parseInt(id),
+            Name: goalData.name || "Untitled Goal",
+            name_c: goalData.name,
+            target_amount_c: parseFloat(goalData.targetAmount),
+            current_amount_c: parseFloat(goalData.currentAmount),
+            deadline_c: goalData.deadline
+          }
+        ]
+      };
+
+      const response = await apperClient.updateRecord(this.tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} goals:`, failed);
+        }
+
+        if (successful.length > 0) {
+          const g = successful[0].data;
+          return {
+            ...g,
+            name: g.name_c,
+            targetAmount: g.target_amount_c,
+            currentAmount: g.current_amount_c,
+            deadline: g.deadline_c
+          };
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error updating goal:", error?.response?.data?.message || error);
+      throw error;
     }
-    
-    this.goals[index] = {
-      ...this.goals[index],
-      ...goalData,
-      Id: parseInt(id), // Ensure Id remains unchanged
-    };
-    
-    return { ...this.goals[index] };
   }
 
   async delete(id) {
-    await delay(300);
-    
-    const index = this.goals.findIndex(g => g.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Goal with Id ${id} not found`);
+    try {
+      const apperClient = getApperClient();
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await apperClient.deleteRecord(this.tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const failed = response.results.filter(r => !r.success);
+
+        if (failed.length > 0) {
+          console.error(`Failed to delete goal:`, failed);
+          throw new Error("Failed to delete goal");
+        }
+
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Error deleting goal:", error?.response?.data?.message || error);
+      throw error;
     }
-    
-    const deletedGoal = this.goals[index];
-    this.goals.splice(index, 1);
-    return { ...deletedGoal };
   }
 
-  // Additional helper methods
   async getActiveGoals() {
-    await delay(250);
-    return this.goals.filter(g => g.currentAmount < g.targetAmount);
+    const goals = await this.getAll();
+    return goals.filter(g => g.currentAmount < g.targetAmount);
   }
 
   async getCompletedGoals() {
-    await delay(250);
-    return this.goals.filter(g => g.currentAmount >= g.targetAmount);
+    const goals = await this.getAll();
+    return goals.filter(g => g.currentAmount >= g.targetAmount);
   }
 
   async addFunds(id, amount) {
-    await delay(300);
+    const goal = await this.getById(id);
+    const newCurrentAmount = goal.currentAmount + parseFloat(amount);
     
-    const index = this.goals.findIndex(g => g.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Goal with Id ${id} not found`);
-    }
-    
-    this.goals[index].currentAmount += parseFloat(amount);
-    return { ...this.goals[index] };
+    return this.update(id, {
+      name: goal.name,
+      targetAmount: goal.targetAmount,
+      currentAmount: newCurrentAmount,
+      deadline: goal.deadline
+    });
   }
 
   async getGoalProgress(id) {
-    await delay(150);
-    
-    const goal = this.goals.find(g => g.Id === parseInt(id));
-    if (!goal) {
-      throw new Error(`Goal with Id ${id} not found`);
-    }
+    const goal = await this.getById(id);
     
     const progress = (goal.currentAmount / goal.targetAmount) * 100;
     const remaining = goal.targetAmount - goal.currentAmount;
