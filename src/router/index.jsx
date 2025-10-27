@@ -12,7 +12,7 @@ const Transactions = lazy(() => import("@/components/pages/Transactions"));
 const Budgets = lazy(() => import("@/components/pages/Budgets"));
 const Goals = lazy(() => import("@/components/pages/Goals"));
 const Reports = lazy(() => import("@/components/pages/Reports"));
-
+const BankAccounts = lazy(() => import("@/components/pages/BankAccounts"));
 const Login = lazy(() => import("@/components/pages/Login"));
 const Signup = lazy(() => import("@/components/pages/Signup"));
 const Callback = lazy(() => import("@/components/pages/Callback"));
@@ -74,7 +74,11 @@ const mainRoutes = [
   }),
   createRoute({
     path: "reports",
-    element: <Reports />,
+element: <Reports />,
+  }),
+  createRoute({
+    path: "/bank-accounts",
+    element: <BankAccounts />,
   }),
   {
     path: "*",

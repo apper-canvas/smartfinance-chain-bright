@@ -63,6 +63,19 @@
       },
       "redirectOnDeny": "/login"
     }
+},
+  "/bank-accounts": {
+    "allow": {
+      "when": {
+        "conditions": [
+          {
+            "label": "User must be logged in to view bank accounts",
+            "rule": "authenticated"
+          }
+        ]
+      },
+      "redirectOnDeny": "/login"
+    }
   },
   "/login": {
     "allow": {

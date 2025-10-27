@@ -8,11 +8,12 @@ const Layout = () => {
   const location = useLocation();
   const { logout } = useAuth();
   
-  const navigation = [
+const navigation = [
     { name: "Dashboard", href: "/", icon: "LayoutDashboard", current: location.pathname === "/" },
     { name: "Transactions", href: "/transactions", icon: "Receipt", current: location.pathname === "/transactions" },
     { name: "Budgets", href: "/budgets", icon: "PiggyBank", current: location.pathname === "/budgets" },
     { name: "Goals", href: "/goals", icon: "Target", current: location.pathname === "/goals" },
+    { name: "Bank Accounts", href: "/bank-accounts", icon: "Landmark", current: location.pathname === "/bank-accounts" },
     { name: "Reports", href: "/reports", icon: "BarChart3", current: location.pathname === "/reports" },
   ];
 
