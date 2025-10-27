@@ -53,13 +53,13 @@ const Budgets = () => {
   };
 
   // Calculate spending for each budget
-  const calculateBudgetSpending = (budget) => {
+const calculateBudgetSpending = (budget) => {
     const budgetDate = new Date(budget.month + "-01");
     const monthStart = startOfMonth(budgetDate);
     const monthEnd = endOfMonth(budgetDate);
     
     // Find category by ID
-    const category = categories.find(cat => cat.Id === parseInt(budget.categoryId));
+    const category = categories.find(cat => cat.Id === budget.categoryId);
     if (!category) return 0;
 
     const spent = transactions
@@ -67,7 +67,7 @@ const Budgets = () => {
         const transactionDate = new Date(transaction.date);
         return (
           transaction.type === "expense" &&
-          transaction.category === category.name &&
+          transaction.category === category.name_c &&
           transactionDate >= monthStart &&
           transactionDate <= monthEnd
         );
@@ -77,8 +77,7 @@ const Budgets = () => {
     return spent;
   };
 
-  // Get budgets for selected month with spending data
-  const getCurrentMonthBudgets = () => {
+const getCurrentMonthBudgets = () => {
     return budgets
       .filter(budget => budget.month === selectedMonth)
       .map(budget => ({
@@ -87,8 +86,8 @@ const Budgets = () => {
       }))
       .sort((a, b) => {
         // Sort by category name
-        const categoryA = categories.find(cat => cat.Id === parseInt(a.categoryId))?.name || "";
-        const categoryB = categories.find(cat => cat.Id === parseInt(b.categoryId))?.name || "";
+        const categoryA = categories.find(cat => cat.Id === a.categoryId)?.name_c || "";
+        const categoryB = categories.find(cat => cat.Id === b.categoryId)?.name_c || "";
         return categoryA.localeCompare(categoryB);
       });
   };
@@ -111,9 +110,9 @@ const Budgets = () => {
     };
   };
 
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(cat => cat.Id === parseInt(categoryId));
-    return category ? category.name : "Unknown Category";
+const getCategoryName = (categoryId) => {
+    const category = categories.find(cat => cat.Id === categoryId);
+    return category ? category.name_c : "Unknown Category";
   };
 
   const getCategoryIcon = (categoryName) => {

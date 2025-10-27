@@ -18,12 +18,12 @@ const BudgetModal = ({ isOpen, onClose, onSubmit, budget = null, mode = "add" })
   const [loading, setLoading] = useState(false);
 
   // Load categories on mount
-  useEffect(() => {
+useEffect(() => {
     const loadCategories = async () => {
       try {
         const data = await categoryService.getAll();
         // Only show expense categories for budgets
-        setCategories(data.filter(cat => cat.type === "expense"));
+        setCategories(data.filter(cat => cat.type_c === "expense"));
       } catch (error) {
         console.error("Failed to load categories:", error);
         toast.error("Failed to load categories");
@@ -111,9 +111,9 @@ const BudgetModal = ({ isOpen, onClose, onSubmit, budget = null, mode = "add" })
     }
   };
 
-  const getCategoryName = (categoryId) => {
+const getCategoryName = (categoryId) => {
     const category = categories.find(cat => cat.Id.toString() === categoryId);
-    return category ? category.name : "";
+    return category ? category.name_c : "";
   };
 
   if (!isOpen) return null;
